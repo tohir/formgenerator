@@ -1,7 +1,7 @@
 <?php 
 
 /**
- * From: https://github.com/timostamm/NonceUtil-PHP
+ *  https://github.com/timostamm/NonceUtil-PHP
  */
 
 /**

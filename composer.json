@@ -1,0 +1,38 @@
+{
+    "name": "tohir/formgenerator",
+    "description": "PHP Form Generator with both Client-Side (jQuery Validation Plugin) and Server-Side Validation",
+    "require": {
+        "php": ">=5.3.0",
+        "respect/validation": "dev-develop",
+        "timostamm/nonceutil-php": "*"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "timostamm/nonceutil-php",
+                "version": "1",
+                "source": {
+                    "url": "https://github.com/timostamm/NonceUtil-PHP.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "files": ["NonceUtil.php"]
+                }
+            }
+        }
+    ],
+    "keywords": ["form", "validation"],
+    "homepage": "http://github.com/tohir/formgenerator",
+    "license": "MIT",
+    "authors": [{
+        "name": "Tohir Solomons",
+        "email": "tohir@tohir.co.za"
+    }],
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    }
+}

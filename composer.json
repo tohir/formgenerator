@@ -3,7 +3,7 @@
     "description": "PHP Form Generator with both Client-Side (jQuery Validation Plugin) and Server-Side Validation",
     "require": {
         "php": ">=5.3.0",
-        "respect/validation": "dev-develop",
+        "respect/validation": "dev-master",
         "timostamm/nonceutil-php": "*"
     },
     "repositories": [

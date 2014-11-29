@@ -5,7 +5,8 @@
         "php": ">=5.3.0",
         "respect/validation": "dev-master"
     },
-    
+    "minimum-stability": "dev",
+    "prefer-stable" : true,
     "keywords": ["form", "validation"],
     "homepage": "http://github.com/tohir/formgenerator",
     "license": "MIT",

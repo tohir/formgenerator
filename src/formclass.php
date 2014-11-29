@@ -11,7 +11,7 @@ if (!defined('FORM_TIMEOUT')){
 
 // This is the location where file uploads are stored - must have trailing slash
 if (!defined('TMP_UPLOAD_LOCATION')) {
-    define('TMP_UPLOAD_LOCATION', APPLICATION_PATH.'/cache/tmpuploads/');
+    define('TMP_UPLOAD_LOCATION', '/tmp/tmpuploads/');
 }
 
 class FormGenerator

@@ -146,7 +146,11 @@ Layout;
             
             $class = 'FormElement_'.strtoupper($element['type']);
             if (class_exists($class)) {
-                $item = new $class($name, $element, $anonFindElement, $this->postMode, $this->nonceValid, $this->formId, $this->elementLayout);
+                
+                // Nonce Valid should always be true for hidden elements to preserve their values
+                $nonceValid = ($class == 'FormElement_HIDDEN') ? TRUE : $this->nonceValid;
+                
+                $item = new $class($name, $element, $anonFindElement, $this->postMode, $nonceValid, $this->formId, $this->elementLayout);
                 
                 $this->renderedElements[] = $item->getRendered();
                 $this->validationRules = array_merge($this->validationRules, $item->getValidation());
@@ -456,7 +460,7 @@ abstract class FormElement_BASE
      * @param string $formId Form Id - used to generate unique element Ids
      * @param string $layout HTML Layout with Label and Element
      */
-    public function __construct($name, $params, $findElementMethod='', $postMode=FALSE, $nOnceValid=TRUE, $formId='', $layout='')
+    public function __construct($name, $params, $findElementMethod='', $postMode=FALSE, $nonceValid=TRUE, $formId='', $layout='')
     {
         $requiredParams = array(
             'name' => $name,
@@ -494,7 +498,7 @@ abstract class FormElement_BASE
         
         
         // Preserve and submitted values if in post mode
-        if ($postMode  && $nOnceValid) {
+        if ($postMode  && $nonceValid) {
             $this->elementParams['value'] = $this->getPostValue(TRUE);
         }
         

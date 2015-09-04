@@ -1,5 +1,7 @@
 <?php 
 
+namespace TohirExternal;
+
 /**
  *  https://github.com/timostamm/NonceUtil-PHP
  */
@@ -87,5 +89,3 @@ class NonceUtil {
 	
 }
 
-
-?>

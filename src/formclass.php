@@ -64,7 +64,7 @@ class FormGenerator
         unset($structure['__form_id']);
         
         // Generate Nonce Key
-        $this->nonceKey = NonceUtil::generate(FORM_SALT.'~'.$this->formId, FORM_TIMEOUT);
+        $this->nonceKey = \TohirExternal\NonceUtil::generate(FORM_SALT.'~'.$this->formId, FORM_TIMEOUT);
         
         // Store Elements separately and remove from Structure
         $this->elements = $structure['elements'];
@@ -119,7 +119,7 @@ Layout;
         
         // Check Nonce if in Post Mode
         if ($this->postMode) {
-            $this->nonceValid = NonceUtil::check(FORM_SALT.'~'.$hiddenFormId->getValue(), $nonceElement->getValue());
+            $this->nonceValid = \TohirExternal\NonceUtil::check(FORM_SALT.'~'.$hiddenFormId->getValue(), $nonceElement->getValue());
         }
         
         // If nonce failed, mark form as invalid, and add an error message
@@ -128,7 +128,7 @@ Layout;
             $this->validationErrors[] = 'Invalid form submission, please try again';
             
             // Generate a new Nonce Key and Element!
-            $newNonceKey = NonceUtil::generate(FORM_SALT.'~'.$hiddenFormId->getValue(), FORM_TIMEOUT);
+            $newNonceKey = \TohirExternal\NonceUtil::generate(FORM_SALT.'~'.$hiddenFormId->getValue(), FORM_TIMEOUT);
             $nonceElement = new FormElement_Hidden('__nonce', array('value'=>$newNonceKey), $anonFindElement);
         }
         

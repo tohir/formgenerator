@@ -642,6 +642,7 @@ abstract class FormElement_BASE
                 $this->validationErrors[] = ValidationMessages::getMessage($validationRule, $this->elementParams, $this->elementId, $details, $extraInfo);
             }
         } catch (Exception $e) {
+			//var_dump($e);
             throw new Exception('FormValidator::'.$validationRule.' has not been defined!');
         }
     }
@@ -790,6 +791,23 @@ abstract class FormElement_BASE
     }
     
 }
+
+class FormElement_LABEL
+{
+    public static function generate($for, $labelText, $escape=TRUE, $labelClass='')
+	{
+		if ($escape) {
+			$labelText = htmlspecialchars($labelText);
+		}
+		
+		if (!empty($labelClass)) {
+			$labelClass = 'class="'.$labelClass.'"';
+		}
+		
+		return '<label for="'.$for.'" '.$labelClass.'>'.$labelText.'</label>';
+	}
+}
+
 
 class FormElement_SUBMIT extends FormElement_BASE
 {
@@ -1262,7 +1280,7 @@ class FormElement_MULTISELECT extends FormElement_DROPDOWN
     {
         $params = array(
             'id' => $this->elementId,
-            'name' => $this->elementParams['name'],
+            'name' => $this->elementParams['name'].'[]',
             'multiple' => 'multiple',
             'size' => $this->elementParams['listsize'],
             'class' => $this->elementParams['cssClass'],
@@ -1535,7 +1553,7 @@ class FormValidator
             return TRUE;
         }
         
-        return RespectValidator::date()->validate($value);;
+        return RespectValidator::date()->validate($value);
     }
     
     public static function url($details, $value)
@@ -1544,13 +1562,7 @@ class FormValidator
             return TRUE;
         }
         
-        return RespectValidator::call(
-            'parse_url',
-             RespectValidator::arr()->key('scheme', RespectValidator::startsWith('http'))
-                ->key('host',   RespectValidator::domain())
-                //->key('path',   RespectValidator::string())
-                //->key('query',  RespectValidator::notEmpty())
-        )->validate($value);
+        return RespectValidator::url()->validate($value);
     }
     
     public static function number($details, $value)
@@ -1560,17 +1572,17 @@ class FormValidator
         } else if ($value === '0') { // Zero as a string is valid
             return TRUE;
         }
-        return RespectValidator::int()->validate($value);
+        return RespectValidator::intVal()->validate($value);
     }
     
     public static function minlength($details, $value)
     {
-        return RespectValidator::string()->length($details, null)->validate($value);
+        return RespectValidator::stringType()->length($details, null)->validate($value);
     }
     
     public static function maxlength($details, $value)
     {
-        return RespectValidator::string()->length(null, $details)->validate($value);
+        return RespectValidator::stringType()->length(null, $details)->validate($value);
     }
     
     public static function min($details, $value)

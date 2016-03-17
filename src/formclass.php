@@ -910,7 +910,9 @@ class FormElement_TEXTAREA extends FormElement_BASE
         $this->formElement = '<textarea '.$this->keyValuesToString($params).'>'.htmlspecialchars($this->elementParams['value']).'</textarea>';
         
         if (!empty($this->elementParams['label'])) {
-            $this->labelElement = '<label for="'.$this->elementId.'">'.htmlspecialchars($this->elementParams['label']).'</label>';
+        	$isHTML = isset($this->elementParams['isHTMLLabel']) ? $this->elementParams['isHTMLLabel'] : FALSE;
+		$label = $isHTML ? $this->elementParams['label'] : htmlspecialchars($this->elementParams['label']);
+        	$this->labelElement = '<label for="'.$this->elementId.'">'.$label.'</label>';
         }
     }
 }

@@ -315,10 +315,10 @@ ValidationRules;
 
          // JSON_PRETTY_PRINT only works in PHP 5.4
         if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            $validationRules = json_encode($this->validationRules, JSON_PRETTY_PRINT);
+            $validationRules = json_encode($this->validationRules, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
             $validationMessages = json_encode($this->validationMessages, JSON_PRETTY_PRINT);
         } else {
-            $validationRules = json_encode($this->validationRules);
+            $validationRules = json_encode($this->validationRules, JSON_UNESCAPED_SLASHES);
             $validationMessages = json_encode($this->validationMessages);
         }
         

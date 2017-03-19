@@ -1590,16 +1590,16 @@ class FormValidator
     public static function min($details, $value)
     {
         return RespectValidator::oneOf(
-            RespectValidator::int()->min((int)$details),
-            RespectValidator::int()->equals((int)$details)
+            RespectValidator::intVal()->min((int)$details),
+            RespectValidator::intVal()->equals((int)$details)
         )->validate($value);
     }
     
     public static function max($details, $value)
     {
         return RespectValidator::oneOf(
-            RespectValidator::int()->max((int)$details),
-            RespectValidator::int()->equals((int)$details)
+            RespectValidator::intVal()->max((int)$details),
+            RespectValidator::intVal()->equals((int)$details)
         )->validate($value);
     }
     

@@ -957,11 +957,13 @@ l>';
 class FormElement_TEXT extends FormElement_BASE
 {
     protected $validRules = array('required', 'remote', 'email', 'date', 'url', 'minlength', 'maxlength', 'number', 'equalTo', 'differentTo', 'regex');
+	
+	protected $type = 'text';
     
     protected function generate()
     {
         $params = array(
-            'type' => 'text',
+            'type' => $this->type,
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
             'value' => htmlspecialchars($this->elementParams['value']),
@@ -1014,6 +1016,9 @@ class FormElement_URL extends FormElement_TEXT
 class FormElement_NUMBER extends FormElement_TEXT
 {
     protected $validRules = array('required', 'minlength', 'maxlength', 'number', 'min', 'max');
+	
+	protected $type = 'number';
+	
     protected function generate()
     {
         parent::generate();

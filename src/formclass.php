@@ -906,6 +906,10 @@ class FormElement_TEXTAREA extends FormElement_BASE
             'placeholder' => $this->elementParams['placeholder'],
             'readonly' => $this->elementParams['readonly'],
         );
+	
+	if (isset($this->elementParams['rows'])) {
+            $params['rows'] = $this->elementParams['rows'];
+        }
         
         $this->formElement = '<textarea '.$this->keyValuesToString($params).'>'.htmlspecialchars($this->elementParams['value']).'</textarea>';
         

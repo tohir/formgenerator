@@ -27,6 +27,7 @@ class FormGenerator
     private $validationMessages = [];
  	
     private $addOnJavascript = [];
+    private $formOnInputCode = [];
     
     private $postMode = FALSE;
     private $nonceValid = TRUE;
@@ -166,6 +167,7 @@ Layout;
                 }
                 
                 $this->addOnJavascript = array_merge($this->addOnJavascript, $item->getAddOnJavascript());
+                $this->formOnInputCode = array_merge($this->formOnInputCode, $item->getFormOnInputCode());
                 
                 // If postMode, and nonce passes, then get the Posted values, and check Validation
                 // If nonce fails, we dont retrieve posted values and do validation checks
@@ -191,6 +193,8 @@ Layout;
         // Add Submit Button
         $submitButton = new FormElement_SUBMIT('submitbutton', ['value'=>$this->formParts['submitbutton']]);
         $this->renderedElements[] = $submitButton->getRendered();
+        
+        $this->formParts['oninput'] = implode(';', $this->formOnInputCode);
     }
     
     /**
@@ -255,7 +259,7 @@ Layout;
     {
         $str = '<form id="'.$this->formId.'"';
         
-        $possibleFormAttributes = ['name', 'method', 'action', 'class', 'onsubmit', 'enctype']; // What Else?
+        $possibleFormAttributes = ['name', 'method', 'action', 'class', 'onsubmit', 'enctype', 'oninput']; // What Else?
         
         foreach ($this->formParts as $element=>$value)
         {
@@ -409,6 +413,7 @@ abstract class FormElement_BASE
     protected $labelElement = '';
     protected $validation = [];
     protected $addOnJavascript = [];
+    protected $formOnInput = [];
     
     protected $formId;
     protected $elementParams;
@@ -550,6 +555,11 @@ abstract class FormElement_BASE
     public function getAddOnJavascript()
     {
         return $this->addOnJavascript;
+    }
+    
+    public function getFormOnInputCode()
+    {
+        return $this->formOnInput;
     }
     
     /**
@@ -1039,8 +1049,42 @@ class FormElement_URL extends FormElement_TEXT
 class FormElement_HTMLDATE extends FormElement_TEXT
 {
     protected $validRules = ['required', 'min', 'max'];
-	
-	protected $type = 'date';
+    protected $type = 'date';
+}
+
+class FormElement_RANGE extends FormElement_TEXT
+{
+    protected $validRules = ['required', 'min', 'max'];
+    protected $type = 'range';
+    
+    protected function generate()
+    {
+        $outName = md5($this->elementParams['name'].'_out_value');
+        
+        $this->elementParams['extra'] = sprintf('<output name="%s" for="%s">%s</output>', $outName, $this->elementParams['name'], $this->elementParams['value']);
+        
+        $this->formOnInput[] = sprintf('%s.value = %s.valueAsNumber', $outName, $this->elementParams['name']);
+        
+        parent::generate();
+    }
+}
+
+class FormElement_TIME extends FormElement_TEXT
+{
+    protected $validRules = ['required', 'min', 'max'];
+    protected $type = 'time';
+}
+
+class FormElement_WEEK extends FormElement_TEXT
+{
+    protected $validRules = ['required', 'min', 'max'];
+    protected $type = 'week';
+}
+
+class FormElement_DATETIME extends FormElement_TEXT
+{
+    protected $validRules = ['required', 'min', 'max'];
+    protected $type = 'datetime-local';
 }
 
 class FormElement_NUMBER extends FormElement_TEXT

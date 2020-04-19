@@ -21,19 +21,19 @@ class FormGenerator
     private $formId = '';
     private $elementLayout;
     
-    private $renderedElements = array();
+    private $renderedElements = [];
     
-    private $validationRules = array();
-    private $validationMessages = array();
+    private $validationRules = [];
+    private $validationMessages = [];
  	
-    private $addOnJavascript = array();
+    private $addOnJavascript = [];
     
     private $postMode = FALSE;
     private $nonceValid = TRUE;
-    private $formData = array();
+    private $formData = [];
     private $isValid = FALSE;
     
-    private $validationErrors = array();
+    private $validationErrors = [];
     
     
     /**
@@ -45,17 +45,17 @@ class FormGenerator
     public function __construct($structure, $elementLayout='', $postMode=FALSE)
     {
         // Defaults for the Form Structure
-        $defaultFormStructure = array(
+        $defaultFormStructure = [
             '__form_id' => uniqid('form_'),
             'name' => 'form',
             'method' => 'post',
             'action' => '',
             'class' => '', // CSS
             'submitbutton' => 'Save Form',
-            'elements' => array(),
+            'elements' => [],
             'form_before_elements_html' => '',
             'form_after_elements_html' => '',
-        );
+        ];
         
         $structure = array_merge($defaultFormStructure, $structure);
         
@@ -112,10 +112,10 @@ Layout;
         
         
         // Added Hidden Form Id
-        $hiddenFormId = new FormElement_Hidden('__form_id', array('value'=>$this->formId), $anonFindElement, $this->postMode);
+        $hiddenFormId = new FormElement_Hidden('__form_id', ['value'=>$this->formId], $anonFindElement, $this->postMode);
         
         // Create Nonce Element
-        $nonceElement = new FormElement_Hidden('__nonce', array('value'=>$this->nonceKey), $anonFindElement, $this->postMode);
+        $nonceElement = new FormElement_Hidden('__nonce', ['value'=>$this->nonceKey], $anonFindElement, $this->postMode);
         
         // Check Nonce if in Post Mode
         if ($this->postMode) {
@@ -129,7 +129,7 @@ Layout;
             
             // Generate a new Nonce Key and Element!
             $newNonceKey = \TohirExternal\NonceUtil::generate(FORM_SALT.'~'.$hiddenFormId->getValue(), FORM_TIMEOUT);
-            $nonceElement = new FormElement_Hidden('__nonce', array('value'=>$newNonceKey), $anonFindElement);
+            $nonceElement = new FormElement_Hidden('__nonce', ['value'=>$newNonceKey], $anonFindElement);
         }
         
         // Add Rendered Items
@@ -189,7 +189,7 @@ Layout;
         }
         
         // Add Submit Button
-        $submitButton = new FormElement_SUBMIT('submitbutton', array('value'=>$this->formParts['submitbutton']));
+        $submitButton = new FormElement_SUBMIT('submitbutton', ['value'=>$this->formParts['submitbutton']]);
         $this->renderedElements[] = $submitButton->getRendered();
     }
     
@@ -201,7 +201,7 @@ Layout;
     {
         if (array_key_exists($name, $this->elements)) {
             // Add Name to Element and Return
-            return array_merge(array('name'=>$name), $this->elements[$name]);
+            return array_merge(['name'=>$name], $this->elements[$name]);
         } else {
             return FALSE;
         }
@@ -255,7 +255,7 @@ Layout;
     {
         $str = '<form id="'.$this->formId.'"';
         
-        $possibleFormAttributes = array('name', 'method', 'action', 'class', 'onsubmit', 'enctype'); // What Else?
+        $possibleFormAttributes = ['name', 'method', 'action', 'class', 'onsubmit', 'enctype']; // What Else?
         
         foreach ($this->formParts as $element=>$value)
         {
@@ -407,8 +407,8 @@ abstract class FormElement_BASE
 {
     protected $formElement = '';
     protected $labelElement = '';
-    protected $validation = array();
-    protected $addOnJavascript = array();
+    protected $validation = [];
+    protected $addOnJavascript = [];
     
     protected $formId;
     protected $elementParams;
@@ -416,7 +416,7 @@ abstract class FormElement_BASE
     
     protected $isValid = TRUE;
     
-    protected $validationErrors = array();
+    protected $validationErrors = [];
     
     private $findElementMethod;
     
@@ -426,13 +426,13 @@ abstract class FormElement_BASE
      *
      * Most allow required. Text has alot more
      */
-    protected $validRules = array('required', 'remote');
+    protected $validRules = ['required', 'remote'];
     
     
     /**
      * These are the default values that can be overridden
      */
-    protected $requiredParamsBase = array(
+    protected $requiredParamsBase = [
         'value' => '',
         'id' => '',
         'options' => '',
@@ -449,16 +449,16 @@ abstract class FormElement_BASE
         'isHTMLLabel' => FALSE, // Some Elements support HTML within the label, otherwise label is escaped
         'labelCssClass' => '', // NOT YET IMPLEMENTED - UNDER CONSIDERATION
         
-        'validation' => array(), // List of Validation Rules applied to element
+        'validation' => [], // List of Validation Rules applied to element
         'extra' => '', // Extra HTML
         
         'html' => '', // For HTML Fragments
-        'options' => array(), // For Dropdowns, multiselect
+        'options' => [], // For Dropdowns, multiselect
         'listsize' => 5, // For Select Lists
         'divider' => '<br />', // For Radio Buttons and Checkbox Groups
         'addempty' => TRUE, // For Dropdowns, multiselect
         'validationMessage' => '', // Override Validation Error Message
-    );
+    ];
     
     
     /**
@@ -472,10 +472,10 @@ abstract class FormElement_BASE
      */
     public function __construct($name, $params, $findElementMethod='', $postMode=FALSE, $nonceValid=TRUE, $formId='', $layout='')
     {
-        $requiredParams = array(
+        $requiredParams = [
             'name' => $name,
             'postMode' => $postMode,
-        );
+        ];
         
         $requiredParams = array_merge($this->requiredParamsBase, $requiredParams);
         
@@ -487,7 +487,7 @@ abstract class FormElement_BASE
         
         $this->elementParams = array_merge($requiredParams, $params);
         
-        $dontNeedNameParamArray = array('FormElement_SUBMIT', 'FormElement_HTML');
+        $dontNeedNameParamArray = ['FormElement_SUBMIT', 'FormElement_HTML'];
         
         // Fatal Error - Name has to be set
         if (empty($this->elementParams['name']) && !in_array(get_class($this), $dontNeedNameParamArray)) {
@@ -571,7 +571,7 @@ abstract class FormElement_BASE
     
     public function getPostData()
     {
-        return array($this->elementParams['name'] => $this->getPostValue());
+        return [$this->elementParams['name'] => $this->getPostValue()];
     }
     
     public function isValid()
@@ -641,11 +641,11 @@ abstract class FormElement_BASE
                 $this->isValid = FALSE;
                 
                 
-                if (in_array($validationRule, array('equalTo', 'differentTo'))) {
+                if (in_array($validationRule, ['equalTo', 'differentTo'])) {
                     $findElementMethod = $this->findElementMethod;
                     $extraInfo = $findElementMethod($details);
                 } else {
-                    $extraInfo = array();
+                    $extraInfo = [];
                 }
                 
                 
@@ -661,7 +661,7 @@ abstract class FormElement_BASE
     {
         // Checks that Validation Array for Element has been setup
         if (!isset($this->validation[$this->elementParams['name']])) {
-            $this->validation[$this->elementParams['name']] = array();
+            $this->validation[$this->elementParams['name']] = [];
         }
         
         // Then Add
@@ -822,15 +822,15 @@ class FormElement_LABEL
 class FormElement_SUBMIT extends FormElement_BASE
 {
     // There are no Validation Rules for Submit Button
-    protected $validRules = array();
+    protected $validRules = [];
     
     protected function generate()
     {
-        $params = array(
+        $params = [
             'type' => 'submit',
             'name' => $this->elementParams['name'],
             'value' => $this->elementParams['value'],
-        );
+        ];
         
         $this->formElement = '<input '.$this->keyValuesToString($params).' />';
     }
@@ -847,7 +847,7 @@ class FormElement_SUBMIT extends FormElement_BASE
 class FormElement_HTML extends FormElement_BASE
 {
     // There are no Validation Rules for HTML Fragments
-    protected $validRules = array();
+    protected $validRules = [];
     
     protected function generate()
     {
@@ -864,16 +864,16 @@ class FormElement_HTML extends FormElement_BASE
 class FormElement_HIDDEN extends FormElement_BASE
 {
     // There are no Validation Rules for Hidden Elements
-    protected $validRules = array();
+    protected $validRules = [];
     
     protected function generate()
     {
-        $params = array(
+        $params = [
             'type' => 'hidden',
             'id' => $this->elementParams['id'],
             'name' => $this->elementParams['name'],
             'value' => htmlspecialchars($this->elementParams['value']),
-        );
+        ];
         
         $this->formElement = '<input '.$this->keyValuesToString($params).' />';
     }
@@ -900,14 +900,14 @@ class FormElement_TEXTAREA extends FormElement_BASE
 {
     // It is possible to validate that it's a date, email, url for textarea
     // Possible vs Should We?
-    protected $validRules = array('required', 'email', 'date', 'url', 'minlength', 'maxlength', 'number');
+    protected $validRules = ['required', 'email', 'date', 'url', 'minlength', 'maxlength', 'number'];
     
     protected $cssClass = ''; // Needed so that it can be overridden by the WYSIWYG
     
     protected function generate()
     {
         // Consider Rows / Columns
-        $params = array(
+        $params = [
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
             'class' => $this->cssClass.$this->elementParams['cssClass'],
@@ -915,7 +915,7 @@ class FormElement_TEXTAREA extends FormElement_BASE
             'style' => $this->elementParams['style'],
             'placeholder' => $this->elementParams['placeholder'],
             'readonly' => $this->elementParams['readonly'],
-        );
+        ];
 	
 	if (isset($this->elementParams['rows'])) {
             $params['rows'] = $this->elementParams['rows'];
@@ -934,18 +934,18 @@ class FormElement_TEXTAREA extends FormElement_BASE
 class FormElement_HTMLEDITOR extends FormElement_TEXTAREA
 {
     // Ignore, we can fix later
-    protected $validRules = array('');
+    protected $validRules = [''];
     
     protected $cssClass = 'ckeditor '; // To show it's a ckeditor
 }
 
 class FormElement_PASSWORD extends FormElement_BASE
 {
-    protected $validRules = array('required', 'remote', 'minlength', 'equalTo', 'regex');
+    protected $validRules = ['required', 'remote', 'minlength', 'equalTo', 'regex'];
     
     protected function generate()
     {
-        $params = array(
+        $params = [
             'type' => 'password',
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
@@ -953,7 +953,7 @@ class FormElement_PASSWORD extends FormElement_BASE
             'class' => $this->elementParams['cssClass'],
             'disabled' => $this->elementParams['disabled'],
             'style' => $this->elementParams['style'],
-        );
+        ];
         
         $this->formElement = '<input '.$this->keyValuesToString($params).' />';
         
@@ -978,7 +978,7 @@ class FormElement_TEXT extends FormElement_BASE
     
     protected function generate()
     {
-        $params = array(
+        $params = [
             'type' => $this->type,
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
@@ -988,7 +988,7 @@ class FormElement_TEXT extends FormElement_BASE
             'readonly' => $this->elementParams['readonly'],
             'style' => $this->elementParams['style'],
             'placeholder' => $this->elementParams['placeholder'],
-        );
+        ];
         
         foreach ($this->addElementParams as $extraParam)
         {
@@ -1036,9 +1036,16 @@ class FormElement_URL extends FormElement_TEXT
     }
 }
 
+class FormElement_HTMLDATE extends FormElement_TEXT
+{
+    protected $validRules = ['required', 'min', 'max'];
+	
+	protected $type = 'date';
+}
+
 class FormElement_NUMBER extends FormElement_TEXT
 {
-    protected $validRules = array('required', 'minlength', 'maxlength', 'number', 'min', 'max');
+    protected $validRules = ['required', 'minlength', 'maxlength', 'number', 'min', 'max'];
 	
 	protected $type = 'number';
 	
@@ -1051,7 +1058,7 @@ class FormElement_NUMBER extends FormElement_TEXT
 
 class FormElement_IMAGESELECTOR extends FormElement_TEXT
 {
-    protected $validRules = array('required');
+    protected $validRules = ['required'];
     protected function generate()
     {
         $src = isset($this->elementParams['value']) ? 'src="'.$this->elementParams['value'].'"' : '';
@@ -1069,20 +1076,20 @@ class FormElement_IMAGESELECTOR extends FormElement_TEXT
 class FormElement_FILE extends FormElement_BASE
 {
     // mimetype, multi separated by comma
-    protected $validRules = array('required', 'mimetype', 'extension', 'maxfilesize'); //'remote', 
+    protected $validRules = ['required', 'mimetype', 'extension', 'maxfilesize']; //'remote', 
     
     private $requiredValidationPassed = TRUE;
     
     protected function generate()
     {
-        $params = array(
+        $params = [
             'type' => 'file',
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
             'class' => $this->elementParams['cssClass'],
             'disabled' => $this->elementParams['disabled'],
             'style' => $this->elementParams['style'],
-        );
+        ];
         
         $this->formElement = '<input '.$this->keyValuesToString($params).' />';
         
@@ -1120,12 +1127,12 @@ class FormElement_FILE extends FormElement_BASE
         
         // If Required Validation Failed, We only submit that
         if (!$this->requiredValidationPassed) {
-            return array($this->elementParams['name'] => '');
+            return [$this->elementParams['name'] => ''];
         }
         
         // If If Required Validation Passed, but there are other errors
         if (!$this->isValid) {
-            return array($this->elementParams['name'] => '');
+            return [$this->elementParams['name'] => ''];
         }
         
         // Try to upload file
@@ -1136,13 +1143,13 @@ class FormElement_FILE extends FormElement_BASE
             
             move_uploaded_file($_FILES[$this->elementParams['name']]['tmp_name'], $destination);
             
-            $data = array(
+            $data = [
                 'filename' => $_FILES[$this->elementParams['name']]['name'],
                 'filepath' => $destination,
                 'mimetype' => $_FILES[$this->elementParams['name']]['type'],
                 'filesize' => filesize($destination),
                 'storagepath' => $tempStoragePath,
-            );
+            ];
             
             
         } catch (\Exception $e) {
@@ -1150,11 +1157,11 @@ class FormElement_FILE extends FormElement_BASE
             // Fail!
             $this->isValid = FALSE;
             $this->validationErrors[] = 'Upload Error';
-            return array($this->elementParams['name'] => '');
+            return [$this->elementParams['name'] => ''];
         }
         
         
-        return array($this->elementParams['name'] => $data);
+        return [$this->elementParams['name'] => $data];
     }
     
     /**
@@ -1240,7 +1247,7 @@ class FormElement_FILE extends FormElement_BASE
 
 class FormElement_DROPDOWN extends FormElement_BASE
 {
-    protected $validRules = array('required');
+    protected $validRules = ['required'];
     
     protected function generate()
     {
@@ -1258,7 +1265,7 @@ class FormElement_DROPDOWN extends FormElement_BASE
         }
         
         // Array with single item - Cant use empty as Zero could be a valid value
-        $valueList = strlen(trim($this->elementParams['value'])) == 0 ? array() : array($this->elementParams['value']);
+        $valueList = strlen(trim($this->elementParams['value'])) == 0 ? [] : array($this->elementParams['value']);
         
         $this->generateCode($params, $valueList); 
     }
@@ -1308,7 +1315,7 @@ class FormElement_MULTISELECT extends FormElement_DROPDOWN
 {
     protected function generate()
     {
-        $params = array(
+        $params = [
             'id' => $this->elementId,
             'name' => $this->elementParams['name'].'[]',
             'multiple' => 'multiple',
@@ -1316,7 +1323,7 @@ class FormElement_MULTISELECT extends FormElement_DROPDOWN
             'class' => $this->elementParams['cssClass'],
             'disabled' => $this->elementParams['disabled'],
             'style' => $this->elementParams['style'],
-        );
+        ];
         
         $this->generateCode($params, explode(',', $this->elementParams['value'])); // Array split by comma
     }
@@ -1326,22 +1333,22 @@ class FormElement_LIST extends FormElement_DROPDOWN
 {
     protected function generate()
     {
-        $params = array(
+        $params = [
             'id' => $this->elementId,
             'name' => $this->elementParams['name'],
             'size' => $this->elementParams['listsize'],
             'class' => $this->elementParams['cssClass'],
             'disabled' => $this->elementParams['disabled'],
             'style' => $this->elementParams['style'],
-        );
+        ];
         
-        $this->generateCode($params, array($this->elementParams['value'])); // Array with single item
+        $this->generateCode($params, [$this->elementParams['value']]); // Array with single item
     }
 }
 
 class FormElement_RADIOBUTTONGROUP extends FormElement_BASE
 {
-    protected $validRules = array('required');
+    protected $validRules = ['required'];
     protected $inputType = 'radio';
     protected $elementNameSuffix = ''; // Checkbox Groups which extend this, needs this
     
@@ -1364,14 +1371,14 @@ class FormElement_RADIOBUTTONGROUP extends FormElement_BASE
             
             $checked = $this->isChecked($value) ? 'checked="checked"' : '';
             
-            $params = array(
+            $params = [
                 'id' => $id,
                 'name' => $this->elementParams['name'].$this->elementNameSuffix,
                 'type' => $this->inputType,
                 'value' => htmlspecialchars($value),
                 'class' => $this->elementParams['cssClass'],
                 'style' => $this->elementParams['style'],
-            );
+            ];
             
             $this->formElement .= $divider."<label for=\"{$id}\" class=\"nowrap {$labelClass}\">";
             $this->formElement .= "<input {$this->keyValuesToString($params)} {$checked} {$disabled}/> ";
@@ -1406,9 +1413,9 @@ class FormElement_CHECKBOXGROUP extends FormElement_RADIOBUTTONGROUP
 class FormElement_MAPINPUT extends FormElement_BASE
 {
     // There are no Validation Rules at present, will fix later
-    protected $validRules = array();
+    protected $validRules = [];
     
-    private $mapObjectKeys = array('latitude'=>'Latitude', 'longitude'=>'Longitude', 'zoomlevel'=>'Zoom Level');
+    private $mapObjectKeys = ['latitude'=>'Latitude', 'longitude'=>'Longitude', 'zoomlevel'=>'Zoom Level'];
     
     public function __construct($name, $params, $findElementMethod='', $postMode=FALSE, $nOnceValid=TRUE, $formId='', $layout='')
     {
@@ -1425,7 +1432,7 @@ class FormElement_MAPINPUT extends FormElement_BASE
     
     public function getPostData()
     {
-        $values = array();
+        $values = [];
         
         foreach ($this->mapObjectKeys as $name=>$label)
         {
@@ -1447,7 +1454,7 @@ class FormElement_MAPINPUT extends FormElement_BASE
         {
             $divStyle = 'width:30%; float:left;';
             
-            $latitudeParams = array(
+            $latitudeParams = [
                 'type' => 'text',
                 'placeholder' => $label,
                 'value' => $this->elementParams[$name.'Value'],
@@ -1455,17 +1462,17 @@ class FormElement_MAPINPUT extends FormElement_BASE
                 'id' => md5('map~'.$this->elementParams['name'].'~'.$name),
                 'class' => 'mapinput_'.$name,
                 'maptarget' => $id,
-            );
+            ];
             $this->formElement .= '<div style="'.$divStyle.'"><input '.$this->keyValuesToString($latitudeParams).' /></div>';
         }
         
         $this->formElement .= '<br clear="both" /></div>';
         
-        $divParams = array(
+        $divParams = [
             'id' => $id,
             'class' => $this->elementParams['cssClass'],
             'style' => $this->elementParams['style'],
-        );
+        ];
         
         $this->formElement .= '<div '.$this->keyValuesToString($divParams).'></div>';
         
@@ -1476,14 +1483,14 @@ class FormElement_MAPINPUT extends FormElement_BASE
         
         
         
-        $jsObjectValue = array(
+        $jsObjectValue = [
             'targetMapId' => $id,
             'zoomlevel' => (int)$this->elementParams['zoomlevelValue'], // We always set this
             
             'latUpdate' => md5('map~'.$this->elementParams['name'].'~latitude'),
             'lngUpdate' => md5('map~'.$this->elementParams['name'].'~longitude'),
             'zoomUpdate' => md5('map~'.$this->elementParams['name'].'~zoomlevel'),
-        );
+        ];
         
         // And $this->elementParams['zoomlevelValue'] ??
         if (FormClassUtils::emptyVars($this->elementParams['latitudeValue'], $this->elementParams['longitudeValue'])) {
@@ -1514,12 +1521,12 @@ class FormClassUtils
     public static function humanReadableToBytes($input)
     {
         $number = (int)$input;
-        $units = array(
+        $units = [
             'b' => 1,
             'k' => 1024,
             'm' => 1048576,
             'g' => 1073741824
-        );
+        ];
         $unit = strtolower(substr($input, -1));
         if (isset($units[$unit])) {
             $number = $number * $units[$unit];
@@ -1669,7 +1676,7 @@ class ValidationMessages
      * @param string $elementId CSS Id of the Form Element
      * @param string $validationDetails Validation Rule Properties (Like for minlength, etc)
      */
-    public static function getMessage($validator, $element, $elementId, $validationDetails, $extra=array())
+    public static function getMessage($validator, $element, $elementId, $validationDetails, $extra=[])
     {
         $label = empty($element['label']) ? $element['name'] : $element['label'];
         $label = htmlspecialchars($label);

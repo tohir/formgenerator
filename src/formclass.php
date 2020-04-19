@@ -1069,6 +1069,12 @@ class FormElement_RANGE extends FormElement_TEXT
     }
 }
 
+class FormElement_COLOR extends FormElement_TEXT
+{
+    protected $validRules = ['required'];
+    protected $type = 'color';
+}
+
 class FormElement_TIME extends FormElement_TEXT
 {
     protected $validRules = ['required', 'min', 'max'];

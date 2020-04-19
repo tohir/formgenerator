@@ -213,6 +213,16 @@ Layout;
      */
     public function render()
     {
+        return $this->renderForm() . $this->validationRules();
+    }
+    
+    /**
+     * Method to render the form with HTML, JavaScript
+     * Though render() is preferred, this is kept for backward compatibility
+     * @return string
+     */
+    public function renderForm()
+    {
         if ($this->postMode && count($this->validationErrors) > 0) {
             $str = '<ul class="formErrors"><li>';
             
@@ -223,7 +233,7 @@ Layout;
             $str = '';
         }
         
-        return $str.$this->formStart().$this->formElements().$this->formEnd().$this->validationRules();
+        return $str.$this->formStart().$this->formElements().$this->formEnd();
     }
     
     /**
@@ -279,7 +289,7 @@ Layout;
      * Method to get the Validation Rules Javascript
      * @return string
      */
-    private function validationRules()
+    public function validationRules()
     {
         // Ignore If No Rules?
         if (empty($this->validationRules)) {
@@ -960,9 +970,11 @@ l>';
 
 class FormElement_TEXT extends FormElement_BASE
 {
-    protected $validRules = array('required', 'remote', 'email', 'date', 'url', 'minlength', 'maxlength', 'number', 'equalTo', 'differentTo', 'regex');
+    protected $validRules = ['required', 'remote', 'email', 'date', 'url', 'minlength', 'maxlength', 'number', 'equalTo', 'differentTo', 'regex'];
 	
 	protected $type = 'text';
+    
+    protected $addElementParams = ['min', 'max'];
     
     protected function generate()
     {
@@ -978,11 +990,18 @@ class FormElement_TEXT extends FormElement_BASE
             'placeholder' => $this->elementParams['placeholder'],
         );
         
-        $isHTML = isset($this->elementParams['isHTMLLabel']) ? $this->elementParams['isHTMLLabel'] : FALSE;
+        foreach ($this->addElementParams as $extraParam)
+        {
+            if (isset($this->elementParams[$extraParam]) && in_array($extraParam, $this->validRules)) {
+                $params[$extraParam] = $this->elementParams[$extraParam];
+            }
+        }
+        
+        $isHTMLLabel = isset($this->elementParams['isHTMLLabel']) ? $this->elementParams['isHTMLLabel'] : FALSE;
         
         $this->formElement = '<input '.$this->keyValuesToString($params).' />';
         
-        $label = $isHTML ? $this->elementParams['label'] : htmlspecialchars($this->elementParams['label']);
+        $label = $isHTMLLabel ? $this->elementParams['label'] : htmlspecialchars($this->elementParams['label']);
         
         if (!empty($this->elementParams['label'])) {
             $this->labelElement = '<label for="'.$this->elementId.'">'.$label.'</label>';

@@ -53,6 +53,7 @@ class FormGenerator
             'action' => '',
             'class' => '', // CSS
             'submitbutton' => 'Save Form',
+            'cancelurl' => '',
             'elements' => [],
             'form_before_elements_html' => '',
             'form_after_elements_html' => '',
@@ -190,9 +191,16 @@ Layout;
             }
         }
         
+        // Cancel Button
+        if (empty($this->formParts['cancelurl'])) {
+            $cancelLink = '';
+        } else {
+            $cancelLink = sprintf(' &nbsp; / &nbsp; <a href="%s">Cancel</a>', $this->formParts['cancelurl']);
+        }
+        
         // Add Submit Button
         $submitButton = new FormElement_SUBMIT('submitbutton', ['value'=>$this->formParts['submitbutton']]);
-        $this->renderedElements[] = $submitButton->getRendered();
+        $this->renderedElements[] = $submitButton->getRendered().$cancelLink;
         
         $this->formParts['oninput'] = implode(';', $this->formOnInputCode);
     }

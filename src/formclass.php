@@ -1111,7 +1111,11 @@ class FormElement_IMAGESELECTOR extends FormElement_TEXT
     protected $validRules = ['required'];
     protected function generate()
     {
-        $src = isset($this->elementParams['value']) ? 'src="'.$this->elementParams['value'].'"' : '';
+        if (isset($this->elementParams['preview_image'])) {
+            $src =  'src="'.$this->elementParams['preview_image'].'"';
+        } else {
+            $src = isset($this->elementParams['value']) ? 'src="'.$this->elementParams['value'].'"' : '';
+        }
         
         $img = '<img class="imageselector" id="img_'.$this->elementId.'" '.$src.' />';
         

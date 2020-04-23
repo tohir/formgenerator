@@ -1056,13 +1056,13 @@ class FormElement_URL extends FormElement_TEXT
 
 class FormElement_HTMLDATE extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max'];
+    protected $validRules = ['required', 'min', 'max', 'remote'];
     protected $type = 'date';
 }
 
 class FormElement_RANGE extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max'];
+    protected $validRules = ['required', 'min', 'max', 'remote'];
     protected $type = 'range';
     
     protected function generate()
@@ -1079,31 +1079,31 @@ class FormElement_RANGE extends FormElement_TEXT
 
 class FormElement_COLOR extends FormElement_TEXT
 {
-    protected $validRules = ['required'];
+    protected $validRules = ['required', 'remote'];
     protected $type = 'color';
 }
 
 class FormElement_TIME extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max'];
+    protected $validRules = ['required', 'min', 'max', 'remote'];
     protected $type = 'time';
 }
 
 class FormElement_WEEK extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max'];
+    protected $validRules = ['required', 'min', 'max', 'remote'];
     protected $type = 'week';
 }
 
 class FormElement_DATETIME extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max'];
+    protected $validRules = ['required', 'min', 'max', 'remote'];
     protected $type = 'datetime-local';
 }
 
 class FormElement_NUMBER extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'minlength', 'maxlength', 'number', 'min', 'max'];
+    protected $validRules = ['required', 'minlength', 'maxlength', 'number', 'min', 'max', 'remote'];
 	
 	protected $type = 'number';
 	
@@ -1116,7 +1116,7 @@ class FormElement_NUMBER extends FormElement_TEXT
 
 class FormElement_IMAGESELECTOR extends FormElement_TEXT
 {
-    protected $validRules = ['required'];
+    protected $validRules = ['required', 'remote'];
     protected function generate()
     {
         if (isset($this->elementParams['preview_image'])) {

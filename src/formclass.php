@@ -1062,7 +1062,8 @@ class FormElement_HTMLDATE extends FormElement_TEXT
 
 class FormElement_RANGE extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'min', 'max', 'remote'];
+    protected $validRules = ['required', 'min', 'max', 'step', 'remote'];
+    protected $addElementParams = ['min', 'max', 'step'];
     protected $type = 'range';
     
     protected function generate()
@@ -1103,8 +1104,8 @@ class FormElement_DATETIME extends FormElement_TEXT
 
 class FormElement_NUMBER extends FormElement_TEXT
 {
-    protected $validRules = ['required', 'minlength', 'maxlength', 'number', 'min', 'max', 'remote'];
-	
+    protected $validRules = ['required', 'minlength', 'maxlength', 'number', 'min', 'max', 'step', 'remote'];
+	protected $addElementParams = ['min', 'max', 'step'];
 	protected $type = 'number';
 	
     protected function generate()

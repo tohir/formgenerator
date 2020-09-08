@@ -1718,7 +1718,7 @@ class FormValidator
     
     public static function regex($details, $value)
     {
-        if (isset($details['phpRegex'])) {
+        if (isset($details['phpRegex']) && !empty($value)) {
             return preg_match($details['phpRegex'], $value); /* @todo Fix*/
         } else {
             return TRUE;
@@ -1742,7 +1742,9 @@ class ValidationMessages
     public static function getMessage($validator, $element, $elementId, $validationDetails, $extra=[])
     {
         $label = empty($element['label']) ? $element['name'] : $element['label'];
-        $label = htmlspecialchars($label);
+        if (!$element['isHTMLLabel']) {
+            $label = htmlspecialchars($label);
+        }
         
         switch ($validator)
         {

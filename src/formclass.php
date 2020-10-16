@@ -456,7 +456,9 @@ abstract class FormElement_BASE
         'readonly' => '',
         'style' => '',
         'placeholder' => '',
-        
+        'input_preprend' => '',
+        'input_append' => '',
+
         'layout' => '',
         
         'isHTMLLabel' => FALSE, // Some Elements support HTML within the label, otherwise label is escaped
@@ -542,6 +544,15 @@ abstract class FormElement_BASE
     public function getRendered()
     {
         $layout = $this->layout;
+
+		if (!empty($this->elementParams['input_preprend'])) {
+			$this->formElement = '<div class="input-group-prepend"><div class="input-group-text">'.$this->elementParams['input_preprend'].'</div></div>'
+				.$this->formElement;
+		}
+
+		if (!empty($this->elementParams['input_append'])) {
+			$this->formElement .= '<div class="input-group-append"><div class="input-group-text">'.$this->elementParams['input_append'].'</div></div>';
+		}
         
         $layout = str_replace('[-LABEL-]', $this->labelElement, $layout);
         $layout = str_replace('[-ELEMENT-]', $this->formElement, $layout);

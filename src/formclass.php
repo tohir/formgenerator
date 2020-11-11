@@ -128,7 +128,7 @@ Layout;
         // If nonce failed, mark form as invalid, and add an error message
         if (!$this->nonceValid ) {
             $this->isValid = FALSE;
-            $this->validationErrors[] = 'Invalid form submission, please try again';
+            $this->validationErrors[] = 'Form submission timeout exceeded, please try again.';
             
             // Generate a new Nonce Key and Element!
             $newNonceKey = \TohirExternal\NonceUtil::generate(FORM_SALT.'~'.$hiddenFormId->getValue(), FORM_TIMEOUT);

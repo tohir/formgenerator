@@ -1688,7 +1688,7 @@ class FormValidator
         } else if ($value === '0') { // Zero as a string is valid
             return TRUE;
         }
-        return RespectValidator::intVal()->validate($value);
+        return RespectValidator::floatVal()->validate($value);
     }
     
     public static function minlength($details, $value)

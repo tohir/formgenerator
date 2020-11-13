@@ -1006,9 +1006,9 @@ class FormElement_TEXT extends FormElement_BASE
 {
     protected $validRules = ['required', 'remote', 'email', 'date', 'url', 'minlength', 'maxlength', 'number', 'equalTo', 'differentTo', 'regex'];
 	
-	protected $type = 'text';
+    protected $type = 'text';
     
-    protected $addElementParams = ['min', 'max'];
+    protected $addElementParams = ['min', 'max', 'minlength', 'maxlength', 'pattern'];
     
     protected function generate()
     {
